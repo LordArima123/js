@@ -25,16 +25,19 @@ function writeFile(path, data) {
 }
 
 // hello world, i love javascript
-let text = ', i love javascript'
-const read_text = readFile('text.txt')
-read_text.then((data) => {
-	text = data+text;
-	writeFile('text.txt', text).then(()=>{
-		console.log("Written!");
-	}).catch((err)=>{
-		console.log(err);
+let text = ', i love javascript';
+const read_text = readFile('text.txt');
+read_text
+	.then((data) => {
+		text = data + text;
+		writeFile('text.txt', text)
+			.then(() => {
+				console.log('Written!');
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	})
+	.catch((error) => {
+		console.log(error);
 	});
-}).catch((error)=>{
-	console.log(error);
-})
-	
