@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-function readFile(path) {
+/* function readFile(path) {
 	return new Promise((resolve, reject) => {
 		fs.readFile(path, (err, data) => {
 			if (err) {
@@ -9,6 +9,16 @@ function readFile(path) {
 				resolve(data);
 			}
 		});
+	});
+}*/
+
+const readFile = async(path)=>{
+	fs.readFile(path, (err, data) => {
+		if (err) {
+			return(err);
+		} else {
+			return(data);
+		}
 	});
 }
 
