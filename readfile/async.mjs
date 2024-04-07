@@ -21,3 +21,12 @@ const writeFile = async (path, data) => {
 		}
 	});
 };
+
+try {
+	for(let i = 1; i<5; i++){
+		const content = 'Hello'
+		await writeFile(`output${i}.txt`, content)
+	}
+} catch (error) {
+	console.log('error, ',error);
+}
