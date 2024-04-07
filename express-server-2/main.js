@@ -32,6 +32,24 @@ app.get('/', (req, res) => {
 	});
 });
 
+app.get('/todo/:id', (req, res) => {
+	const todo = todos.find((todo) => {
+		return todo.id === Number(req.params.id)});
+	res.render('todo', {
+		title: 'Todo ',
+		todo: todo,
+	});
+});
+
+app.post('/update-todo/:id', (req, res) => {
+	const todo = todos.find((todo) => {
+		return todo.id === Number(req.params.id)});
+
+	todos.push(todo);
+
+	res.redirect('/');
+});
+
 app.post('/add-todo', (req, res) => {
 	const todo = {
 		id: todos.length + 1,
