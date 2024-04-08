@@ -39,28 +39,30 @@ app.get('/todo/:id', (req, res) => {
 		title: 'Todo ',
 		todo: todo,
 	});
-});
+}); //go to todo id
 
 app.post('/update-todo/:id', (req, res) => {
 	const todo = todos.find((todo) => {
 		return todo.id === Number(req.params.id)});
 
-	todos.push(todo);
+	todo.title = req.body.title;
 
-	res.redirect('/');
-});
+}); //update todo
 
 app.post('/add-todo', (req, res) => {
+	let i = 1;
+	for (let todo of todos) {
+		todo.id = i;
+		i++;
+	};
 	const todo = {
-		id: todos.length + 1,
+		id: i,
 		title: req.body.title,
 		done: false,
 	};
-
 	todos.push(todo);
-
 	res.redirect('/');
-});
+}); //change exist id and push new todo
 
 app.get('/remove-todo/:id', (req, res) => {
 	todos = todos.filter((todo) => {
