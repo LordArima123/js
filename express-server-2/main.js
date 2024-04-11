@@ -46,6 +46,7 @@ app.post('/update-todo/:id', (req, res) => {
 		return todo.id === Number(req.params.id)});
 
 	todo.title = req.body.title;
+	res.redirect(`/todo/${todo.id}`);
 
 }); //update todo
 
