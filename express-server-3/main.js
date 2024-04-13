@@ -1,19 +1,9 @@
 import express from 'express';
+import knex from "knex";
+import knexfile from './knexfile.js';
 
 const app = express();
-
-let todos = [
-	{
-		id: 1,
-		title: 'Zajít na pivo',
-		done: true,
-	},
-	{
-		id: 2,
-		title: 'Vrátit se z hospody',
-		done: false,
-	},
-];
+const db = knex(knexfile);
 
 app.set('view engine', 'ejs');
 
@@ -25,61 +15,83 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+	const todos = await db('todos').select("*");
+	console.log(todos);
 	res.render('index', {
 		title: 'Todo List',
 		todos: todos,
 	});
 });
 
-app.get('/todo/:id', (req, res) => {
+app.get('/todo/:id', async (req, res) => {
+	
+	const todos = await db('todos').select("*");
 	const todo = todos.find((todo) => {
 		return todo.id === Number(req.params.id)});
+	if (!todo) {
+		return res.redirect('/');
+	};
 	res.render('todo', {
 		title: 'Todo ',
 		todo: todo,
 	});
 }); //go to todo id
 
-app.post('/update-todo/:id', (req, res) => {
+app.post('/update-todo', async (req, res) => {
+	const todos = await db('todos').select("*");
+
 	const todo = todos.find((todo) => {
-		return todo.id === Number(req.params.id)});
+		return todo.id === Number(req.body.id);
+	});
 
+	if (!todo || !todo.id || !todo.title) {
+		return res.redirect('/');
+	}
+	
 	todo.title = req.body.title;
+	await db('todos').select("id","title").where("id",todo.id).update({title:todo.title});
+	
 	res.redirect(`/todo/${todo.id}`);
-
 }); //update todo
 
-app.post('/add-todo', (req, res) => {
-	let i = 1;
-	for (let todo of todos) {
-		todo.id = i;
-		i++;
-	};
+
+app.post('/add-todo',async (req, res) => {
 	const todo = {
-		id: i,
 		title: req.body.title,
 		done: false,
+	}
+	if (!todo.title) {
+		return res.redirect('/');
 	};
-	todos.push(todo);
+	await db('todos').insert(todo);
 	res.redirect('/');
 }); //change exist id and push new todo
 
-app.get('/remove-todo/:id', (req, res) => {
-	todos = todos.filter((todo) => {
-		return todo.id !== Number(req.params.id);
+app.get('/remove-todo/:id', async (req, res) => {
+	const todos = await db('todos').select("*");
+	const todo = todos.find((todo) => {
+		return todo.id === Number(req.params.id);
 	});
+	if (!todo.title) {
+		return res.redirect('/');
+	};
+	await db('todos').where("id",todo.id).del();
 
 	res.redirect('/');
 });
 
-app.get('/toggle-todo/:id', (req, res) => {
+app.get('/toggle-todo/:id', async (req, res) => {
+	const todos = await db('todos').select("*");
 	const todo = todos.find((todo) => {
 		return todo.id === Number(req.params.id);
 	});
+	if (!todo) {
+		return res.redirect('/');
+	};
 
 	todo.done = !todo.done;
-
+	await db("todos").select("id","done").where("id",todo.id).update({done:todo.done});
 	res.redirect('/');
 });
 
@@ -97,3 +109,4 @@ app.use((err, req, res, next) => {
 app.listen(8000, () => {
 	console.log('Server listening on http://localhost:8000');
 });
+
