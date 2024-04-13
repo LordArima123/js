@@ -34,28 +34,44 @@ app.get('/', (req, res) => {
 
 app.get('/todo/:id', (req, res) => {
 	const todo = todos.find((todo) => {
-		return todo.id === Number(req.params.id)});
+		return todo.id === Number(req.params.id);
+	});
+
+	if (!todo) {
+		return res.redirect('/');
+	}
+
 	res.render('todo', {
 		title: 'Todo ',
 		todo: todo,
 	});
 }); //go to todo id
 
-app.post('/update-todo/:id', (req, res) => {
+app.post('/update-todo', (req, res) => {
+	const body = req.body;
+
 	const todo = todos.find((todo) => {
-		return todo.id === Number(req.params.id)});
+		return todo.id === Number(body.id);
+	});
 
-	todo.title = req.body.title;
+	if (!todo || !todo.id || !todo.title) {
+		return res.redirect('/');
+	}
+
+	todo.title = body.title;
 	res.redirect(`/todo/${todo.id}`);
-
 }); //update todo
 
 app.post('/add-todo', (req, res) => {
+	if (!req.body.title) {
+		return res.redirect('/');
+	}
+
 	let i = 1;
 	for (let todo of todos) {
 		todo.id = i;
 		i++;
-	};
+	}
 	const todo = {
 		id: i,
 		title: req.body.title,
