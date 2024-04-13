@@ -25,9 +25,13 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/todo/:id', async (req, res) => {
+	
 	const todos = await db('todos').select("*");
 	const todo = todos.find((todo) => {
 		return todo.id === Number(req.params.id)});
+	if (!todo) {
+		return res.redirect('/');
+	};
 	res.render('todo', {
 		title: 'Todo ',
 		todo: todo,
@@ -44,9 +48,10 @@ app.post('/update-todo', async (req, res) => {
 	if (!todo || !todo.id || !todo.title) {
 		return res.redirect('/');
 	}
-	console.log(todo);
-	db('todos').select("id","title").where({id:todo.id}).set("title",todo.title);
-	todo.title = body.title;
+	
+	todo.title = req.body.title;
+	await db('todos').select("id","title").where("id",todo.id).update({title:todo.title});
+	
 	res.redirect(`/todo/${todo.id}`);
 }); //update todo
 
@@ -56,26 +61,37 @@ app.post('/add-todo',async (req, res) => {
 		title: req.body.title,
 		done: false,
 	}
-
+	if (!todo.title) {
+		return res.redirect('/');
+	};
 	await db('todos').insert(todo);
 	res.redirect('/');
 }); //change exist id and push new todo
 
-app.get('/remove-todo/:id', (req, res) => {
-	todos = todos.filter((todo) => {
-		return todo.id !== Number(req.params.id);
+app.get('/remove-todo/:id', async (req, res) => {
+	const todos = await db('todos').select("*");
+	const todo = todos.find((todo) => {
+		return todo.id === Number(req.params.id);
 	});
+	if (!todo.title) {
+		return res.redirect('/');
+	};
+	await db('todos').where("id",todo.id).del();
 
 	res.redirect('/');
 });
 
-app.get('/toggle-todo/:id', (req, res) => {
+app.get('/toggle-todo/:id', async (req, res) => {
+	const todos = await db('todos').select("*");
 	const todo = todos.find((todo) => {
 		return todo.id === Number(req.params.id);
 	});
+	if (!todo) {
+		return res.redirect('/');
+	};
 
 	todo.done = !todo.done;
-
+	await db("todos").select("id","done").where("id",todo.id).update({done:todo.done});
 	res.redirect('/');
 });
 
