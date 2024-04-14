@@ -4,10 +4,12 @@ import knexfile from "./knexfile.js";
 
 const app = express();
 const db = knex(knexfile);
+const piority = ["Now", "High", "Moderate", "Low", "Latter"];
 
 app.set("view engine", "ejs");
 
-app.use(express.static("public"));
+app.use("/public", express.static("public"));
+//app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
@@ -17,7 +19,7 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   const todos = await db("todos").select("*").orderBy("piority", "id");
-  const piority = ["Now", "High", "Moderate", "Low", "Latter"];
+
   const newtodos = todos.map((todo) => {
     // const newtodo = {
     //   id: todo.id,
@@ -38,7 +40,7 @@ app.get("/", async (req, res) => {
 
 app.get("/todo/:id", async (req, res) => {
   const todos = await db("todos").select("*");
-  const piority = ["Now", "High", "Moderate", "Low", "Latter"];
+
   console.log(todos);
   const todo = todos.find((todo) => {
     return todo.id === Number(req.params.id);
