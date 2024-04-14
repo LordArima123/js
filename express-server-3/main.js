@@ -30,7 +30,7 @@ app.get('/todo/:id', async (req, res) => {
 	const todo = todos.find((todo) => {
 		return todo.id === Number(req.params.id)});
 	if (!todo) {
-		return res.redirect('/');
+		return res.render('404error');
 	};
 	res.render('todo', {
 		title: 'Todo ',
@@ -45,12 +45,12 @@ app.post('/update-todo', async (req, res) => {
 		return todo.id === Number(req.body.id);
 	});
 
-	if (!todo || !todo.id || !todo.title) {
-		return res.redirect('/');
+	if (!todo || !todo.id || !req.body.title) {
+		return res.redirect(`todo/${todo.id}`);
 	}
 	
 	todo.title = req.body.title;
-	await db('todos').select("id","title").where("id",todo.id).update({title:todo.title});
+	await db('todos').where("id",todo.id).update({title:todo.title});
 	
 	res.redirect(`/todo/${todo.id}`);
 }); //update todo
@@ -91,19 +91,19 @@ app.get('/toggle-todo/:id', async (req, res) => {
 	};
 
 	todo.done = !todo.done;
-	await db("todos").select("id","done").where("id",todo.id).update({done:todo.done});
+	await db("todos").where("id",todo.id).update({done:todo.done});
 	res.redirect('/');
 });
 
 app.use((req, res) => {
 	res.status(404);
-	res.send('404 - Page not found');
+	res.render('404error');
 });
 
 app.use((err, req, res, next) => {
 	console.error(err);
 	res.status(500);
-	res.send('500 - Server error');
+	res.render('500error');
 });
 
 app.listen(8000, () => {
