@@ -7,8 +7,9 @@ export const up = async (knex) => {
     table.string("firstname", 25).notNullable();
     table.string("lastname", 25).notNullable();
     table.string("email").unique();
-    table.string("password", 25).notNullable();
+    table.string("password").notNullable();
     table.string("role").notNullable().defaultTo("0x01");
+    table.string("salt").notNullable();
   });
 };
 
@@ -17,5 +18,5 @@ export const up = async (knex) => {
  * @returns { Promise<void> }
  */
 export const down = async (knex) => {
-  await knex.schema.dropTable("todos");
+  await knex.schema.dropTable("user");
 };

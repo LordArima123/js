@@ -141,6 +141,8 @@ app.use((err, req, res, next) => {
   res.render("500error");
 });
 
-app.listen(8000, () => {
+/*app.listen(8000, () => {
   console.log("Server listening on http://localhost:8000");
-});
+});*/
+
+export default app;
