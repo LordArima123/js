@@ -6,7 +6,6 @@ import createUser from "./models/Usermodels.js";
 
 const router = express();
 const db = knex(knexfile);
-const saltRounds = 10;
 
 router.set("view engine", "ejs");
 
@@ -59,16 +58,25 @@ router.post("/registernew", async (req, res) => {
 router.post("/login", async (req, res) => {
   const users = await db("user").select("*");
   const user = users.find((user) => {
-    return user.iemail == req.body.iemail;
+    return user.email === req.body.iemail;
   });
+  console.log(users);
   if (!user) {
     return res.render("warn", {
       message: "Wrong Email!",
-      returnl: "login",
+      returnl: "",
     });
   }
   const hashedInputPassword = await bcrypt.hash(req.body.password, user.salt);
   if (hashedInputPassword == user.password) {
+    req.session.userId = user.id;
+    //res.json({ email: user.email });
+    res.redirect("/todos");
+  } else {
+    return res.render("warn", {
+      message: "Wrong Password!",
+      returnl: "",
+    });
   }
 });
 
@@ -83,6 +91,7 @@ router.use((err, req, res, next) => {
   res.render("500error");
 });
 
-router.listen(5000, () => {
-  console.log("Server listening on http://localhost:5000");
-});
+/*router.listen(8000, () =>
+  console.log(`Server running on http://localhost:8000`)
+);*/
+export default router;

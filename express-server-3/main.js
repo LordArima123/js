@@ -17,7 +17,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", async (req, res) => {
+app.get("/todos", async (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect("/login");
+  }
   const todos = await db("todos").select("*").orderBy("piority", "id");
 
   const newtodos = todos.map((todo) => {
