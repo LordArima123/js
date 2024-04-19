@@ -2,27 +2,37 @@ import express from "express";
 import knex from "knex";
 import knexfile from "./knexfile.js";
 
+import loginRouter from "./login.js";
+import session from "express-session";
+
+const router = express.Router();
 const app = express();
 const db = knex(knexfile);
 const piority = ["Now", "High", "Moderate", "Low", "Latter"];
 
-app.set("view engine", "ejs");
-
-app.use("/public", express.static("public"));
-//app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
+//app.set("view engine", "ejs");
+////app.set("views", path.join(__dirname, "views")); // Specify the directory where your EJS templates are located
+//
+//app.use("/public", express.static("public"));
+//app.use(express.urlencoded({ extended: true }));
+//
+//app.use((req, res, next) => {
+//  console.log("Incoming request", req.method, req.url);
+//  next();
+//});
+router.use((req, res, next) => {
   console.log("Incomming request", req.method, req.url);
   next();
 });
 
-app.get("/todos", async (req, res) => {
+router.get("/todos", async (req, res) => {
+  console.log("Accessing /todos route");
   if (!req.session.userId) {
-    return res.redirect("/login");
+    return app.res.redirect("/login");
   }
-  const todos = await db("todos").select("*").orderBy("piority", "id");
 
+  const todos = await db("todos").select("*").orderBy("piority", "id");
+  console.log(todos);
   const newtodos = todos.map((todo) => {
     // const newtodo = {
     //   id: todo.id,
@@ -36,12 +46,12 @@ app.get("/todos", async (req, res) => {
   });
 
   res.render("index", {
-    title: "Todo List",
+    title: "todos",
     todos: newtodos,
   });
 });
 
-app.get("/todo/:id", async (req, res) => {
+router.get("/todo/:id", async (req, res) => {
   const todos = await db("todos").select("*");
 
   console.log(todos);
@@ -59,7 +69,7 @@ app.get("/todo/:id", async (req, res) => {
   });
 }); //go to todo id
 
-app.post("/update-todo", async (req, res) => {
+router.post("/update-todo", async (req, res) => {
   const todos = await db("todos").select("*");
 
   const todo = todos.find((todo) => {
@@ -76,7 +86,7 @@ app.post("/update-todo", async (req, res) => {
   res.redirect(`/todo/${todo.id}`);
 }); //update todo
 
-app.post("/piority", async (req, res) => {
+router.post("/piority", async (req, res) => {
   const todos = await db("todos").select("*");
 
   const todo = todos.find((todo) => {
@@ -94,58 +104,58 @@ app.post("/piority", async (req, res) => {
   res.redirect(`/todo/${todo.id}`);
 });
 
-app.post("/add-todo", async (req, res) => {
+router.post("/add-todo", async (req, res) => {
   const todo = {
     title: req.body.title,
     done: false,
   };
   if (!todo.title) {
-    return res.redirect("/");
+    return res.redirect("/todos");
   }
   await db("todos").insert(todo);
-  res.redirect("/");
+  res.redirect("/todos");
 }); //change exist id and push new todo
 
-app.get("/remove-todo/:id", async (req, res) => {
+router.get("/remove-todo/:id", async (req, res) => {
   const todos = await db("todos").select("*");
   const todo = todos.find((todo) => {
     return todo.id === Number(req.params.id);
   });
   if (!todo.title) {
-    return res.redirect("/");
+    return res.redirect("/todos");
   }
   await db("todos").where("id", todo.id).del();
 
-  res.redirect("/");
+  res.redirect("/todos");
 });
 
-app.get("/toggle-todo/:id", async (req, res) => {
+router.get("/toggle-todo/:id", async (req, res) => {
   const todos = await db("todos").select("*");
   const todo = todos.find((todo) => {
     return todo.id === Number(req.params.id);
   });
   if (!todo) {
-    return res.redirect("/");
+    return res.redirect("/todos");
   }
 
   todo.done = !todo.done;
   await db("todos").where("id", todo.id).update({ done: todo.done });
-  res.redirect("/");
+  res.redirect("/todos");
 });
 
-app.use((req, res) => {
+router.use((req, res) => {
   res.status(404);
   res.render("404error");
 });
 
-app.use((err, req, res, next) => {
+router.use((err, req, res, next) => {
   console.error(err);
   res.status(500);
   res.render("500error");
 });
-
 /*app.listen(8000, () => {
   console.log("Server listening on http://localhost:8000");
 });*/
+app.use(router);
 
 export default app;

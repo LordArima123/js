@@ -3,16 +3,25 @@ import knex from "knex";
 import knexfile from "./knexfile.js";
 import bcrypt from "bcrypt";
 import createUser from "./models/Usermodels.js";
+import appRouter from "./main.js";
 
-const router = express();
+import session from "express-session";
+
+const router = express.Router();
 const db = knex(knexfile);
+const app = express();
 
-router.set("view engine", "ejs");
-
-router.use("/public", express.static("public"));
-
-router.use(express.urlencoded({ extended: true }));
-
+//app.use(appRouter);
+//app.set("view engine", "ejs");
+////app.set("views", path.join(__dirname, "views")); // Specify the directory where your EJS templates are located
+//
+//app.use("/public", express.static("public"));
+//app.use(express.urlencoded({ extended: true }));
+//
+//app.use((req, res, next) => {
+//  console.log("Incoming request", req.method, req.url);
+//  next();
+//});
 router.use((req, res, next) => {
   console.log("Incomming request", req.method, req.url);
   next();
@@ -68,7 +77,8 @@ router.post("/login", async (req, res) => {
     });
   }
   const hashedInputPassword = await bcrypt.hash(req.body.password, user.salt);
-  if (hashedInputPassword == user.password) {
+  if (hashedInputPassword === user.password) {
+    console.log("loged in");
     req.session.userId = user.id;
     //res.json({ email: user.email });
     res.redirect("/todos");
@@ -94,4 +104,7 @@ router.use((err, req, res, next) => {
 /*router.listen(8000, () =>
   console.log(`Server running on http://localhost:8000`)
 );*/
-export default router;
+
+app.use(router);
+
+export default app;
