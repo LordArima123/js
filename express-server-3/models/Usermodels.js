@@ -20,8 +20,8 @@ const createUser = async ({ firstname, lastname, email, password }) => {
 
     // Insert user into the database with hashed password and salt
     await db('user').insert({
-      firstname,
-      lastname,
+      firstname:firstname.trim(),
+      lastname:lastname.trim(),
       email: email.toLowerCase(),
       password: hashedPassword,
       salt: salt,
