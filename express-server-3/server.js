@@ -31,9 +31,19 @@ server.use(
     saveUninitialized: false,
   })
 );
-
 server.use(appRouter);
 server.use(loginRouter);
+
+server.use((req, res) => {
+  res.status(404);
+  res.render("404error");
+});
+
+server.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500);
+  res.render("500error");
+});
 
 server.listen(8000, () =>
   console.log(`Server running on http://localhost:8000`)

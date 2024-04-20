@@ -4,6 +4,7 @@
  */
 export const up = async (knex) => {
   await knex.schema.createTable("user", (table) => {
+    table.increments("id").primary();
     table.string("firstname", 25).notNullable();
     table.string("lastname", 25).notNullable();
     table.string("email").unique();

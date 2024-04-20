@@ -1,34 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Log in</title>
-    
-</head>
-<body>
-  <script src = '/public/assets/register.js'></script>
+  </head>
+  <body>
+    <script src="/public/assets/register.js"></script>
 
-    <h1> ToDo List </h1>
+    <h1>ToDo List</h1>
     <h3>REGISTER</h3>
-    <form action ="/registernew" method = "post">
-        <label for = "firstName">First Name:</label>
-        <input type = "text" name = "firstName" maxlength="25" required><br>
-        <label for = "lastName">Last Name:</label>
-        <input type = "text" name = "lastName" maxlength="25" required><br>
-        <label for = "iemail">Email:</label>
-        <input type = "email" name = "iemail" ><br>
+    <form action="/registernew" method="post">
+      <label for="firstName">First Name:</label>
+      <input type="text" name="firstName" maxlength="25" required /><br />
+      <label for="lastName">Last Name:</label>
+      <input type="text" name="lastName" maxlength="25" required /><br />
+      <label for="email">Email:</label>
+      <input type="email" name="email" /><br />
 
-        <label>password :
-          <input name="password" id="password" type="password" onkeyup='check();' required/>
-        </label>
-        <br>
-        <label>confirm password:
-          <input type="password" name="confirm_password" id="confirm_password"  onkeyup='check();' required/> 
-          <span id='message'></span>
-        </label><br>
-        <button type="submit">Submit</button>
+      <label
+        >password :
+        <input
+          name="password"
+          id="password"
+          type="password"
+          onkeyup="check();"
+          required
+        />
+      </label>
+      <br />
+      <label
+        >confirm password:
+        <input
+          type="password"
+          name="confirm_password"
+          id="confirm_password"
+          onkeyup="check();"
+          required
+        />
+        <span id="message"></span> </label
+      ><br />
+      <button type="submit">Submit</button>
     </form>
-    
-</body>
+  </body>
 </html>

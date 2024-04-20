@@ -28,10 +28,13 @@ router.use((req, res, next) => {
 router.get("/todos", async (req, res) => {
   console.log("Accessing /todos route");
   if (!req.session.userId) {
-    return app.res.redirect("/login");
+    return res.redirect("/");
   }
-
-  const todos = await db("todos").select("*").orderBy("piority", "id");
+  console.log(req.session.userId);
+  const todos = await db("todos")
+    .select("*")
+    .where("userid", req.session.userId)
+    .orderBy("piority", "id");
   console.log(todos);
   const newtodos = todos.map((todo) => {
     // const newtodo = {
@@ -62,7 +65,9 @@ router.get("/todo/:id", async (req, res) => {
     return res.render("404error");
   }
   const newtodo = { ...todo, piority: piority[todo.piority - 1] };
-
+  if (req.session.userId !== newtodo.userid) {
+    return res.redirect("/todos");
+  }
   res.render("todo", {
     title: "Todo ",
     todo: newtodo,
@@ -70,7 +75,9 @@ router.get("/todo/:id", async (req, res) => {
 }); //go to todo id
 
 router.post("/update-todo", async (req, res) => {
-  const todos = await db("todos").select("*");
+  const todos = await db("todos")
+    .select("*")
+    .where("userid", req.session.userId);
 
   const todo = todos.find((todo) => {
     return todo.id === Number(req.body.id);
@@ -87,7 +94,9 @@ router.post("/update-todo", async (req, res) => {
 }); //update todo
 
 router.post("/piority", async (req, res) => {
-  const todos = await db("todos").select("*");
+  const todos = await db("todos")
+    .select("*")
+    .where("userid", req.session.userId);
 
   const todo = todos.find((todo) => {
     return todo.id === Number(req.body.id);
@@ -105,13 +114,17 @@ router.post("/piority", async (req, res) => {
 });
 
 router.post("/add-todo", async (req, res) => {
+  console.log(Number(req.session.userId));
+
   const todo = {
     title: req.body.title,
     done: false,
+    userId: Number(req.session.userId),
   };
   if (!todo.title) {
     return res.redirect("/todos");
   }
+  console.log(todo);
   await db("todos").insert(todo);
   res.redirect("/todos");
 }); //change exist id and push new todo
@@ -124,6 +137,10 @@ router.get("/remove-todo/:id", async (req, res) => {
   if (!todo.title) {
     return res.redirect("/todos");
   }
+  if (req.session.userId !== todo.userid) {
+    return res.redirect("/todos");
+  }
+  console.log("Deleting Todo");
   await db("todos").where("id", todo.id).del();
 
   res.redirect("/todos");
@@ -137,22 +154,16 @@ router.get("/toggle-todo/:id", async (req, res) => {
   if (!todo) {
     return res.redirect("/todos");
   }
+  if (req.session.userId !== todo.userid) {
+    return res.redirect("/todos");
+  }
 
   todo.done = !todo.done;
+  console.log("Changing Todo");
   await db("todos").where("id", todo.id).update({ done: todo.done });
   res.redirect("/todos");
 });
 
-router.use((req, res) => {
-  res.status(404);
-  res.render("404error");
-});
-
-router.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500);
-  res.render("500error");
-});
 /*app.listen(8000, () => {
   console.log("Server listening on http://localhost:8000");
 });*/

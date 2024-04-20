@@ -40,7 +40,7 @@ router.post("/registernew", async (req, res) => {
   const newuser = {
     firstname: req.body.firstName,
     lastname: req.body.lastName,
-    email: req.body.iemail,
+    email: req.body.email,
     password: req.body.password,
   };
   console.log(users);
@@ -64,12 +64,16 @@ router.post("/registernew", async (req, res) => {
   res.redirect("/");
 });
 
-router.post("/login", async (req, res) => {
-  const users = await db("user").select("*");
-  const user = users.find((user) => {
-    return user.email === req.body.iemail;
-  });
-  console.log(users);
+router.post("/login", async (req, res, next) => {
+  // const users = await db("user").select("*");
+  // const user = users.find((user) => {
+  //   return user.email === req.body.email;
+  // });
+  const user = await db("user")
+    .select("*")
+    .where("email", req.body.email)
+    .first();
+  console.log(user);
   if (!user) {
     return res.render("warn", {
       message: "Wrong Email!",
@@ -80,6 +84,12 @@ router.post("/login", async (req, res) => {
   if (hashedInputPassword === user.password) {
     console.log("loged in");
     req.session.userId = user.id;
+    req.session.save(function (err) {
+      // session saved
+      if (err) {
+        next(err);
+      }
+    });
     //res.json({ email: user.email });
     res.redirect("/todos");
   } else {
@@ -90,15 +100,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.use((req, res) => {
-  res.status(404);
-  res.render("404error");
-});
-
-router.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500);
-  res.render("500error");
+router.post("/logout", async (req, res) => {
+  req.session.userId = NaN;
+  res.redirect("/");
 });
 
 /*router.listen(8000, () =>

@@ -6,7 +6,7 @@
     <title><%= title %></title>
   </head>
   <body>
-    <h1><a href="/"><%= title %></a></h1>
+    <h1><a href="/todos"><%= title %></a></h1>
 
     <ul>
       <% for (const todo of todos) { %>
@@ -24,6 +24,10 @@
     <form method="post" action="/add-todo">
       <input placeholder="Add Note" name="title" />
       <button type="submit">Submit</button>
+    </form>
+
+    <form method="post" action="/logout">
+      <button type="submit">Log Out</button>
     </form>
   </body>
 </html>
