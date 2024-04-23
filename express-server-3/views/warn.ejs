@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>500 - Server error</title>
+    <title>404 - Page not found</title>
     <link href="/public/assets/test.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <div class="wrapper">
       <div class="box">
-        <h1>500</h1>
-        <p>Sorry, it's me, not you.</p>
+        <h1>ERROR</h1>
+        <p><%=message%></p>
         <p>&#58;&#40;</p>
-        <p><a href="/">Let me try again!</a></p>
+        <p><a href="/<%= returnl %>">try again!</a></p>
       </div>
     </div>
   </body>
