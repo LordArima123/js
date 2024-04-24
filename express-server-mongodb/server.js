@@ -1,21 +1,11 @@
 import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
 import appRouter from "./main.js";
-import knex from "knex";
-import knexfile from "./knexfile.js";
 import session from "express-session";
 import loginRouter from "./login.js";
+import mongoose from "mongoose";
 
 const server = express();
-const db = knex(knexfile);
-//
-//server.use(cors());
-//server.disable("x-powered-by"); //Reduce fingerprinting
-//server.use(cookieParser());
-//server.use(express.urlencoded({ extended: false }));
-//server.use(express.json());
-//
+
 server.set("view engine", "ejs");
 server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
@@ -24,6 +14,15 @@ server.use((req, res, next) => {
   next();
 });
 
+//mongoose.promise = global.Promise;
+//mongoose.set("strictQuery", false);
+try {
+  await mongoose.connect("mongodb://localhost:27017/todos_list");
+  console.log("Connected to Database");
+} catch (err) {
+  console.log("Error connect to Database", err);
+}
+
 server.use(
   session({
     secret: "secret",
@@ -31,6 +30,7 @@ server.use(
     saveUninitialized: false,
   })
 );
+
 server.use(appRouter);
 server.use(loginRouter);
 
