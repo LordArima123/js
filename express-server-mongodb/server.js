@@ -14,8 +14,8 @@ server.use((req, res, next) => {
   next();
 });
 
-//mongoose.promise = global.Promise;
-//mongoose.set("strictQuery", false);
+mongoose.promise = global.Promise;
+mongoose.set("strictQuery", false);
 try {
   await mongoose.connect("mongodb://localhost:27017/todos_list");
   console.log("Connected to Database");

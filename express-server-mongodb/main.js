@@ -14,7 +14,10 @@ router.use((req, res, next) => {
 router.get("/todos", async (req, res) => {
   console.log("Accessing /todos route");
   if (!req.session.userId) {
-    return res.redirect("/");
+    return res.render("warn", {
+      message: "Not Permitted",
+      returnl: "",
+    });
   }
   //console.log(req.session.userId);
 
@@ -52,7 +55,10 @@ router.get("/todo/:id", async (req, res) => {
     piority: piority[todo.piority - 1],
   };
   if (req.session.userId !== newtodo.userid) {
-    return res.redirect("/todos");
+    return res.render("warn", {
+      message: "Not Permitted",
+      returnl: "",
+    });
   }
   res.render("todo", {
     title: "Todo ",
@@ -62,7 +68,10 @@ router.get("/todo/:id", async (req, res) => {
 
 router.post("/update-todo", async (req, res) => {
   if (!req.session.userId) {
-    return res.redirect("/");
+    return res.render("warn", {
+      message: "Not Permitted",
+      returnl: "",
+    });
   }
   if (!req.body.title) {
     return res.redirect(`todo/${req.body.id}`);
@@ -81,7 +90,10 @@ router.post("/piority", async (req, res) => {
 
 router.post("/add-todo", async (req, res) => {
   if (!req.session.userId) {
-    return res.redirect("/");
+    return res.render("warn", {
+      message: "Not Permitted",
+      returnl: "",
+    });
   }
   console.log(req.session.userId);
 
@@ -106,7 +118,10 @@ router.get("/remove-todo/:id", async (req, res) => {
     return res.redirect("/todos");
   }
   if (req.session.userId !== todo.userid) {
-    return res.redirect("/todos");
+    return res.render("warn", {
+      message: "Not Permitted",
+      returnl: "",
+    });
   }
   console.log("Deleting Todo");
   await Todos.findOneAndDelete(todo);
@@ -120,7 +135,10 @@ router.get("/toggle-todo/:id", async (req, res) => {
     return res.redirect("/todos");
   }
   if (req.session.userId !== todo.userid) {
-    return res.redirect("/todos");
+    return res.render("warn", {
+      message: "Not Permitted",
+      returnl: "",
+    });
   }
   console.log("Changing Todo");
   await Todos.findOneAndUpdate(todo, { done: !todo.done });
