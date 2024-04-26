@@ -31,7 +31,7 @@ router.post("/registernew", async (req, res) => {
   if (usercheck) {
     return res.render("warn", {
       message: "Email Existed!",
-      returnl: "register",
+      link: "register",
     });
   } else {
     console.log(usercheck);
@@ -51,11 +51,10 @@ router.post("/login", async (req, res, next) => {
   );
   //console.log(user);
   //console.log(user.password);
-  const isPassword = await user.verifyPassword(`${req.body.password}`);
-  if (!user || !isPassword) {
+  if (!user || !(await user.verifyPassword(`${req.body.password}`))) {
     return res.render("warn", {
       message: "Wrong Email or Password!",
-      returnl: "",
+      link: "",
     });
   } else {
     console.log("loged in");

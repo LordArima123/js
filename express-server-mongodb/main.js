@@ -16,7 +16,7 @@ router.get("/todos", async (req, res) => {
   if (!req.session.userId) {
     return res.render("warn", {
       message: "Not Permitted",
-      returnl: "",
+      link: "",
     });
   }
   //console.log(req.session.userId);
@@ -57,7 +57,7 @@ router.get("/todo/:id", async (req, res) => {
   if (req.session.userId !== newtodo.userid) {
     return res.render("warn", {
       message: "Not Permitted",
-      returnl: "",
+      link: "",
     });
   }
   res.render("todo", {
@@ -70,7 +70,7 @@ router.post("/update-todo", async (req, res) => {
   if (!req.session.userId) {
     return res.render("warn", {
       message: "Not Permitted",
-      returnl: "",
+      link: "",
     });
   }
   if (!req.body.title) {
@@ -92,7 +92,7 @@ router.post("/add-todo", async (req, res) => {
   if (!req.session.userId) {
     return res.render("warn", {
       message: "Not Permitted",
-      returnl: "",
+      link: "",
     });
   }
   console.log(req.session.userId);
@@ -120,7 +120,7 @@ router.get("/remove-todo/:id", async (req, res) => {
   if (req.session.userId !== todo.userid) {
     return res.render("warn", {
       message: "Not Permitted",
-      returnl: "",
+      link: "",
     });
   }
   console.log("Deleting Todo");
@@ -137,7 +137,7 @@ router.get("/toggle-todo/:id", async (req, res) => {
   if (req.session.userId !== todo.userid) {
     return res.render("warn", {
       message: "Not Permitted",
-      returnl: "",
+      link: "",
     });
   }
   console.log("Changing Todo");
