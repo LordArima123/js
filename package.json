@@ -1,6 +1,11 @@
 {
   "dependencies": {
     "expess": "^0.0.1-security",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "vite": "^5.2.10",
+    "yarn": "^1.22.22"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
   }
 }

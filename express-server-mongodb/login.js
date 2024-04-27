@@ -49,8 +49,6 @@ router.post("/login", async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email }).select(
     "+password"
   );
-  //console.log(user);
-  //console.log(user.password);
   if (!user || !(await user.verifyPassword(`${req.body.password}`))) {
     return res.render("warn", {
       message: "Wrong Email or Password!",
