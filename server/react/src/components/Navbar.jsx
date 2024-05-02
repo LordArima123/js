@@ -1,4 +1,3 @@
-import "./Navbar.css";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,7 +9,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 export default function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" id="Appbar">
+      <AppBar position="static">
         <Toolbar>
           <IconButton
             size="large"
@@ -22,7 +21,7 @@ export default function Navbar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            To Do List
           </Typography>
           <Button color="inherit">Login</Button>
         </Toolbar>

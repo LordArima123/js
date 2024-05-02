@@ -1,15 +1,11 @@
 import express from "express";
 
 import User from "./models/User.js";
+import session from "express-session";
 
 const router = express.Router();
 
 const app = express();
-
-router.use((req, res, next) => {
-  console.log("Incomming request", req.method, req.url);
-  next();
-});
 
 router.post("/register", async (req, res) => {
   const newuser = new User({
@@ -20,7 +16,9 @@ router.post("/register", async (req, res) => {
   });
 
   const usercheck = await User.findOne({ email: newuser.email });
+
   if (usercheck) {
+    console.log("Sending error 409");
     return res.status(409).send({ error: "Email address already in use" });
   } else {
     console.log(usercheck);
@@ -43,8 +41,8 @@ router.post("/login", async (req, res) => {
     return res.status(401).send({ err: "Invalid Email or Password!" });
   } else {
     console.log("loged in");
-    req.session.userId = user.id;
-    res.status(200).send({ msg: "Login successful" });
+    const sessionId = user.id;
+    return res.status(200).send({ sessionId });
   }
 });
 

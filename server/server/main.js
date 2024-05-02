@@ -6,11 +6,6 @@ const app = express();
 
 const piority = ["Now", "High", "Moderate", "Low", "Latter"];
 
-router.use((req, res, next) => {
-  console.log("Incomming request", req.method, req.url);
-  next();
-});
-
 router.get("/todos", async (req, res) => {
   console.log("Accessing /todos route");
   // if (!req.session.userId) {

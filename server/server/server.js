@@ -10,6 +10,7 @@ server.set("view engine", "ejs");
 server.use("/public", express.static("public"));
 server.use(express.urlencoded({ extended: true }));
 server.use(cors());
+server.use(express.json());
 server.use((req, res, next) => {
   console.log("Incoming request", req.method, req.url);
   next();
@@ -32,7 +33,7 @@ server.use(
   })
 );
 
-server.use(appRouter);
+//server.use(appRouter);
 server.use(loginRouter);
 
 server.use((req, res) => {
