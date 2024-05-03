@@ -1,0 +1,26 @@
+@media (max-width: 1200px) {
+  .ToDo-box {
+    width: 580px;
+    margin: 0 auto 20px;
+  }
+}
+.ToDo-box {
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("../assets/background2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+}
+.ToDo-box ol {
+  padding: 0;
+}
+.ToDo-box li {
+  text-align: center;
+  font-size: 2em;
+}
