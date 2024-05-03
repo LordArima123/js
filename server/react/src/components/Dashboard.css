@@ -21,6 +21,27 @@ body {
   padding: 0;
 }
 .ToDo-box li {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 2em;
+}
+.ToDo-box .typo {
+  margin-top: 5px;
+}
+
+.ToDo-box .checkBox {
+  margin: 0 10px;
+  margin-bottom: 5px;
+}
+
+.ToDo-box .del {
+  margin: 0 10px;
+  margin-bottom: 5px;
+}
+
+.ToDo-box .gridBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

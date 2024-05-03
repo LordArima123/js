@@ -25,26 +25,24 @@ try {
   console.log("Error connect to Database", err);
 }
 
-server.use(
-  session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+// server.use(
+//   session({
+//     secret: "secret",
+//     resave: false,
+//     saveUninitialized: false,
+//   })
+// );
 
-//server.use(appRouter);
+server.use(appRouter);
 server.use(loginRouter);
 
 server.use((req, res) => {
   res.status(404);
-  res.render("404error");
 });
 
 server.use((err, req, res, next) => {
   console.error(err);
   res.status(500);
-  res.render("500error");
 });
 
 server.listen(8000, () =>
