@@ -1,7 +1,5 @@
 import express from "express";
-
 import User from "./models/User.js";
-import session from "express-session";
 
 const router = express.Router();
 
@@ -37,12 +35,19 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ email: req.body.email }).select(
     "+password"
   );
+  console.log(user);
   if (!user || !(await user.verifyPassword(`${req.body.password}`))) {
     return res.status(401).send({ err: "Invalid Email or Password!" });
   } else {
-    console.log("loged in");
-    const sessionId = user.id;
-    return res.status(200).send({ sessionId });
+    let options = {
+      maxAge: 20 * 60 * 1000, // would expire in 20minutes
+      httpOnly: true, // The cookie is only accessible by the web server
+      secure: true,
+      sameSite: "None",
+    };
+    const token = user.generateAccessJWT();
+    res.cookie("sessionID", token, options);
+    return res.status(200).send({ msg: "" });
   }
 });
 

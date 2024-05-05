@@ -1,6 +1,5 @@
 import express from "express";
 import appRouter from "./main.js";
-import session from "express-session";
 import loginRouter from "./login.js";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -24,14 +23,6 @@ try {
 } catch (err) {
   console.log("Error connect to Database", err);
 }
-
-// server.use(
-//   session({
-//     secret: "secret",
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
 
 server.use(appRouter);
 server.use(loginRouter);

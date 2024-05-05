@@ -3,29 +3,21 @@ import Todos from "./models/Todos.js";
 
 const router = express.Router();
 const app = express();
+const checkSession = (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ err: "Not Permitted" });
+  }
+  next();
+};
 
-router.post("/todos", async (req, res) => {
+router.get("/todos", checkSession, async (req, res) => {
   console.log("Accessing /todos route");
-  console.log(req.body);
-  console.log(req.body.sessionId);
+
   // if (!req.body.sessionId) {
   //   return res.status(401).send({ msg: "not permission" });
   // }
 
-  const todos = await Todos.find({ userid: req.body.sessionId });
-
-  return res.status(200).send({ todos: todos });
-});
-
-router.get("/todos", async (req, res) => {
-  console.log("Accessing /todos route");
-  console.log(req.body);
-  console.log(req.body.sessionId);
-  // if (!req.body.sessionId) {
-  //   return res.status(401).send({ msg: "not permission" });
-  // }
-
-  const todos = await Todos.find({ userid: req.body.sessionId });
+  const todos = await Todos.find({ userid: req.headers.authorization });
 
   return res.status(200).send({ todos: todos });
 });
@@ -57,34 +49,38 @@ router.post("/update-todo", async (req, res) => {
   res.status(200).send({ msg: "Success" });
 }); //update todo
 
-router.post("/piority", async (req, res) => {
+router.put("/piority", async (req, res) => {
   await Todos.findByIdAndUpdate(req.body.id, { piority: req.body.piority });
 
   res.redirect(`/todo/${req.body.id}`);
 });
 
-router.post("/add-todo", async (req, res) => {
-  if (!req.body.sessionId) {
-    return res.status(401).send({ err: "Not Permitted" });
-  }
-  console.log(req.body.sessionId);
+router.post("/add-todo", checkSession, async (req, res) => {
+  console.log("Acessing adding todo");
 
   const todo = new Todos({
     title: req.body.title,
     done: false,
     piority: req.body.piority,
-    userid: req.body.sessionId,
+    userid: req.headers.authorization,
   });
+  console.log(todo);
 
   await todo.save();
 
   res.status(200).send({ msg: "Success" });
 }); //change exist id and push new todo
 
-router.get("/remove-todo/:id", async (req, res) => {
+router.delete("/remove-todo/:id", async (req, res) => {
+  const sessionId = req.headers.authorization;
+  if (!sessionId) {
+    return res.status(401).send({ err: "Not Permitted" });
+  }
+  console.log("Accessing Delete route");
+
   const todo = await Todos.findById(req.params.id);
 
-  if (req.body.sessionId !== todo.userid) {
+  if (sessionId !== todo.userid) {
     return res.status(401).send({ err: "Not Permitted" });
   }
   console.log("Deleting Todo");
@@ -93,20 +89,15 @@ router.get("/remove-todo/:id", async (req, res) => {
   res.status(200).send({ msg: "Success" });
 });
 
-router.get("/toggle-todo/:id", async (req, res) => {
-  const todo = await Todos.findById(req.params.id);
+router.get("/toggle-todo/:id", checkSession, async (req, res) => {
+  console.log("Accessing Change route");
 
-  if (req.body.sessionId !== todo.userid) {
-    return res.status(401).send({ err: "Not Permitted" });
-  }
+  const todo = await Todos.findById(req.params.id);
   console.log("Changing Todo");
   await Todos.findOneAndUpdate(todo, { done: !todo.done });
   res.status(200).send({ msg: "Success" });
 });
 
-/*app.listen(8000, () => {
-  console.log("Server listening on http://localhost:8000");
-});*/
 app.use(router);
 
 export default app;

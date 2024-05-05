@@ -5,6 +5,7 @@ import {
   StyledEngineProvider,
   Checkbox,
   Grid,
+  Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +14,7 @@ import TextField from "@mui/material/TextField";
 import "../components/Dashboard.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import coverRed from "../assets/background-red.jpg";
 import coverBlue from "../assets/background-blue.jpg";
@@ -21,23 +23,63 @@ import coverYellow from "../assets/background-yellow.jpg";
 
 function Dashboard() {
   const sessionId = localStorage.getItem("sessionId");
+  const navigate = useNavigate();
   console.log(sessionId);
   const [add, setAdd] = useState({ add1: "", add2: "", add3: "", add4: "" });
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchData = async () => {
+    setLoading(true);
     await axios
-      .post("http://localhost:8000/todos", { sessionId: sessionId })
+      .get("http://localhost:8000/todos", {
+        headers: { Authorization: sessionId },
+      })
       .then((res) => {
         setData(res.data.todos);
         console.log(res.data.todos);
       })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const sendAddData = async (data) => {
+    await axios
+      .post("http://localhost:8000/add-todo", data, {
+        headers: { Authorization: sessionId },
+      })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  const sendDel = async (id) => {
+    await axios
+      .delete(`http://localhost:8000/remove-todo/${id}`, {
+        headers: {
+          Authorization: `${sessionId}`,
+        },
+      })
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
+  const sendChange = async (id) => {
+    await axios
+      .get(`http://localhost:8000/toggle-todo/${id}`, {
+        headers: { Authorization: sessionId },
+      })
+      .then((res) => console.log(res.data))
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (loading && data.length === 0) {
+      fetchData();
+    }
+  }, [data.length, fetchData, loading]);
 
   const handleStatusChange = (id) => {
     setData((prevData) =>
@@ -45,25 +87,35 @@ function Dashboard() {
         data._id === id ? { ...data, done: !data.done } : data
       )
     );
+    sendChange(id);
   };
 
   const handleRemove = (id) => {
     setData((prevData) => prevData.filter((data) => data._id !== id));
+    sendDel(id);
   };
 
   const handleAddInput = (name, value) => {
     setAdd({ ...add, [name]: value });
   };
 
-  const handleAddItem = (title, piority) => {
+  const handleAddItem = async (title, piority) => {
+    const newData = {
+      title: title,
+      piority: piority,
+      done: false,
+    };
     if (title) {
-      setData((prevData) => [
-        ...prevData,
-        { title: title, piority: piority, done: false, userid: sessionId },
-      ]);
+      setData((prevData) => [...prevData, newData]);
+      sendAddData(newData);
     }
-    //const addnum  = ``
+
     setAdd({ ...add, [`add${piority}`]: "" });
+  };
+
+  const logOut = () => {
+    localStorage.removeItem("sessionId");
+    return navigate("/");
   };
 
   return (
@@ -77,19 +129,30 @@ function Dashboard() {
           alignItems: "center",
         }}
       >
-        <Box sx={{ display: "grid", placeContent: "center" }}>
+        <Box sx={{}}>
           <Typography
             variant="h1"
             sx={{
               fontFamily: "cursive,sans-serif",
-              display: "inline-block",
+              display: "flex",
               justifyContent: "center",
             }}
           >
             To Do List
           </Typography>
         </Box>
-
+        <Button
+          variant="outlined"
+          sx={{
+            position: "absolute",
+            top: "50px",
+            right: "50px",
+            transform: "translate(0, -50%)",
+          }}
+          onClick={logOut}
+        >
+          Log Out
+        </Button>
         <Container
           sx={{
             display: "flex",

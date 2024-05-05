@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { SECRET_ACCESS_TOKEN } from "../config/index.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -49,6 +51,16 @@ userSchema.methods.verifyPassword = async function (userpassword) {
   } catch (err) {
     return false;
   }
+};
+
+userSchema.methods.generateAccessJWT = function () {
+  let payload = {
+    id: this._id,
+  };
+  console.log(SECRET_ACCESS_TOKEN);
+  return jwt.sign(payload, SECRET_ACCESS_TOKEN, {
+    expiresIn: "20m",
+  });
 };
 
 const User = mongoose.model("User", userSchema);

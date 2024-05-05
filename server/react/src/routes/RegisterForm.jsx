@@ -40,12 +40,11 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const handleInput = (name, value) => {
+    checkError(name, value);
     setFormInput({
       ...formInput,
       [name]: value,
     });
-
-    validateInput(name, value);
   };
 
   const validateInput = (name, value) => {
@@ -61,7 +60,6 @@ export default function SignUp() {
       case "username":
         errorMessage =
           value.length < 3 ? "Username must be at least 3 characters long" : "";
-
         break;
       case "email":
         errorMessage = !/\S+@\S+\.\S+/.test(value)
@@ -84,20 +82,30 @@ export default function SignUp() {
       default:
         break;
     }
+    return errorMessage;
+  };
 
+  const checkError = (name, value) => {
+    const error = validateInput(name, value);
     setFormError((fe) => ({
       ...fe,
-      [name]: errorMessage,
+      [name]: error,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const hasErrors = Object.values(formError).some((error) => error !== "");
+    const errors = [];
+    Object.keys(formInput).map((key) => {
+      const error = validateInput(key, formInput[key]);
+      if (error !== "") {
+        errors.push(error);
+      }
+    });
+    const hasErrors = errors.length > 0;
 
     if (hasErrors) {
-      console.log(formError);
+      console.log("Errors: ", errors.join("\n"));
       return;
     } else {
       const data = {

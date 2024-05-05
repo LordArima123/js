@@ -53,7 +53,7 @@ export default function SignIn() {
       console.log("");
       const res = await axios.post("http://localhost:8000/login", formInput);
       if (res.status >= 200 && res.status < 300) {
-        console.log("Request succeeded:", res.data);
+        console.log("Request succeeded:", res.cookie);
         const sessionId = await res.data.sessionId;
         localStorage.setItem("sessionId", sessionId);
         console.log(sessionId);
