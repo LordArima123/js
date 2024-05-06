@@ -18,7 +18,7 @@ const createWindow = () => {
       title: "Second Display",
       icon: "./logobackground.png",
       autoHideMenuBar: true,
-      maximizable: true,
+      fullscreen: true,
       webPreferences: {
         nodeIntegration: true,
       },
@@ -33,7 +33,7 @@ const createWindow = () => {
       title: "Second Display",
       icon: "./logobackground.png",
       autoHideMenuBar: true,
-      maximizable: true,
+      fullscreen: true,
       webPreferences: {
         nodeIntegration: true,
       },
