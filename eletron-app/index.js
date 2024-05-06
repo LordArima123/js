@@ -1,24 +1,50 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("node:path");
+import { app, BrowserWindow, screen } from "electron";
+//import path from "node:path";
+// const { app, BrowserWindow } = require("electron");
+// const path = require("node:path");
 
 const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 1600,
-    height: 900,
-    icon: path.join(__dirname, "logobackground.png"),
-    autoHideMenuBar: true,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
+  const displays = screen.getAllDisplays();
 
-  win.loadFile("index.html");
+  if (displays.length >= 2) {
+    const secondDisplay = displays.find((display) => {
+      return display.bounds.x !== 0 || display.bounds.y !== 0;
+    });
+    const win = new BrowserWindow({
+      x: secondDisplay.bounds.x,
+      y: secondDisplay.bounds.y,
+      width: 800,
+      height: 600,
+      title: "Second Display",
+      icon: "./logobackground.png",
+      autoHideMenuBar: true,
+      maximizable: true,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+    });
+
+    win.maximize();
+    win.loadFile("index.html");
+  } else {
+    const win = new BrowserWindow({
+      width: 800,
+      height: 600,
+      title: "Second Display",
+      icon: "./logobackground.png",
+      autoHideMenuBar: true,
+      maximizable: true,
+      webPreferences: {
+        nodeIntegration: true,
+      },
+    });
+
+    win.maximize();
+    win.loadFile("index.html");
+  }
 };
 app.whenReady().then(() => {
   createWindow();
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
 });
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
