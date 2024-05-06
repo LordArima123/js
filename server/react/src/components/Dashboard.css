@@ -1,0 +1,47 @@
+@media (max-width: 1200px) {
+  .ToDo-box {
+    width: 580px;
+    margin: 0 auto 20px;
+  }
+}
+.ToDo-box {
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("../assets/background2.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+}
+.ToDo-box ol {
+  padding: 0;
+}
+.ToDo-box li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+}
+.ToDo-box .typo {
+  margin-top: 5px;
+}
+
+.ToDo-box .checkBox {
+  margin: 0 10px;
+  margin-bottom: 5px;
+}
+
+.ToDo-box .del {
+  margin: 0 10px;
+  margin-bottom: 5px;
+}
+
+.ToDo-box .gridBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,25 +1,11 @@
 import express from "express";
-
 import User from "./models/User.js";
 
 const router = express.Router();
 
 const app = express();
 
-router.use((req, res, next) => {
-  console.log("Incomming request", req.method, req.url);
-  next();
-});
-
-router.get("/", async (req, res) => {
-  res.render("login");
-});
-
-router.get("/register", async (req, res) => {
-  res.render("register");
-});
-
-router.post("/registernew", async (req, res) => {
+router.post("/register", async (req, res) => {
   const newuser = new User({
     first_name: req.body.firstName,
     last_name: req.body.lastName,
@@ -28,47 +14,46 @@ router.post("/registernew", async (req, res) => {
   });
 
   const usercheck = await User.findOne({ email: newuser.email });
+
   if (usercheck) {
-    return res.render("warn", {
-      message: "Email Existed!",
-      link: "register",
-    });
+    console.log("Sending error 409");
+    return res.status(409).send({ error: "Email address already in use" });
   } else {
     console.log(usercheck);
     try {
       await newuser.save();
       console.log("User created");
+      return res.status(200).send({ msg: "Success" });
     } catch (err) {
       console.error(err);
+      return res.status(500).send({ err: "Error" });
     }
   }
-  res.redirect("/");
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", async (req, res) => {
   const user = await User.findOne({ email: req.body.email }).select(
     "+password"
   );
+  console.log(user);
   if (!user || !(await user.verifyPassword(`${req.body.password}`))) {
-    return res.render("warn", {
-      message: "Wrong Email or Password!",
-      link: "",
-    });
+    return res.status(401).send({ err: "Invalid Email or Password!" });
   } else {
-    console.log("loged in");
-    req.session.userId = user.id;
-    req.session.save(function (err) {
-      if (err) {
-        next(err);
-      }
-    });
-    res.redirect("/todos");
+    let options = {
+      maxAge: 20 * 60 * 1000, // would expire in 20minutes
+      httpOnly: true, // The cookie is only accessible by the web server
+      secure: true,
+      sameSite: "None",
+    };
+    const token = user.generateAccessJWT();
+    res.cookie("sessionID", token, options);
+    return res.status(200).send({ msg: "" });
   }
 });
 
 router.post("/logout", async (req, res) => {
   req.session.userId = NaN;
-  res.redirect("/");
+  res.status(200).send({ msg: "Log Out successful" });
 });
 
 /*router.listen(8000, () =>

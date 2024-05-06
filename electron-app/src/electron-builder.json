@@ -1,0 +1,12 @@
+{
+  "appId": "com.example.myapp",
+  "productName": "Second Display",
+  "directories": {
+    "output": "../install"
+  },
+  "files": ["**/*"],
+  "win": {
+    "target": "nsis",
+    "icon": "logobackground.png"
+  }
+}
