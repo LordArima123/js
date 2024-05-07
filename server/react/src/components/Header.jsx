@@ -1,10 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button, StyledEngineProvider } from "@mui/material";
+import axios from "axios";
 import PropTypes from "prop-types";
+
 Header.propTypes = { name: PropTypes.string.isRequired };
 export default function Header(props) {
   const navigate = useNavigate();
-  const logOut = () => {
+  const logOut = async () => {
+    axios
+      .get("http://localhost:8000/logout", {
+        headers: { Authorization: localStorage.getItem("sessionID") },
+      })
+      .then((res) => {
+        console.log("Status: ", res.status);
+        console.log("Message: ", res.data.message);
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log("status: ", err.response.status);
+          console.log("Message: ", err.response.message);
+        }
+      });
     localStorage.removeItem("sessionID");
     return navigate("/");
   };
