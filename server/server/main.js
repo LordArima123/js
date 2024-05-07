@@ -2,16 +2,19 @@ import express from "express";
 import Todos from "./models/Todos.js";
 import jwt from "jsonwebtoken";
 import User from "./models/User.js";
+import BlackList from "./models/BlackList.js";
 import { SECRET_ACCESS_TOKEN } from "./config/index.js";
 const router = express.Router();
 const app = express();
-const checkSession = (req, res, next) => {
+const checkSession = async (req, res, next) => {
   console.log("Checking Session");
 
   try {
     const cookie = req.headers.authorization;
-    if (!cookie) return res.sendStatus(401); // if there is no cookie from request header, send an unauthorized response.
 
+    if (!cookie) return res.status(401); // if there is no cookie from request header, send an unauthorized response.
+    const checkIfBlackList = await BlackList.findOne({ token: cookie });
+    if (checkIfBlackList) return res.status(401);
     jwt.verify(cookie, SECRET_ACCESS_TOKEN, async (err, decoded) => {
       console.log("Verifying!");
       if (err) {

@@ -1,5 +1,6 @@
 import express from "express";
 import User from "./models/User.js";
+import BlackList from "./models/BlackList.js";
 
 const router = express.Router();
 
@@ -52,9 +53,19 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/logout", async (req, res) => {
-  req.session.userId = NaN;
-  res.status(200).send({ message: "Log Out successful" });
+router.get("/logout", async (req, res) => {
+  try {
+    const cookie = req.headers.authorization;
+    const checkIfBlackList = await BlackList.findOne({ token: cookie });
+    if (checkIfBlackList) {
+      res.status(204);
+    }
+    const newBlackList = new BlackList({ token: cookie });
+    await newBlackList.save();
+    res.status(200).send({ message: "Log Out successful" });
+  } catch (err) {
+    res.status(500).send({ message: "Server Error" });
+  }
 });
 
 /*router.listen(8000, () =>
