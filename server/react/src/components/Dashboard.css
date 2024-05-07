@@ -1,12 +1,22 @@
 @media (max-width: 1200px) {
-  .ToDo-box {
+  .ToDo-box1 {
+    width: 580px;
+    margin: 0 auto 20px;
+  }
+  .ToDo-box2 {
+    width: 580px;
+    margin: 0 auto 20px;
+  }
+  .ToDo-box3 {
+    width: 580px;
+    margin: 0 auto 20px;
+  }
+  .ToDo-box4 {
     width: 580px;
     margin: 0 auto 20px;
   }
 }
-.ToDo-box {
-  overflow: hidden;
-}
+
 body {
   margin: 0;
   padding: 0;
@@ -17,31 +27,65 @@ body {
   background-attachment: fixed;
   height: 100vh;
 }
-.ToDo-box ol {
+ol {
   padding: 0;
 }
-.ToDo-box li {
+li {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2em;
 }
-.ToDo-box .typo {
+.typo {
   margin-top: 5px;
 }
 
-.ToDo-box .checkBox {
+.checkBox {
   margin: 0 10px;
   margin-bottom: 5px;
 }
 
-.ToDo-box .del {
+.del {
   margin: 0 10px;
   margin-bottom: 5px;
 }
 
-.ToDo-box .gridBox {
+.gridBox {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.ToDo-box1 {
+  background-image: url("../assets/background-red.jpg");
+  border: 2px solid black;
+  color: navy;
+}
+
+.ToDo-box2 {
+  background-image: url("../assets/background-blue.jpg");
+  border: 2px solid black;
+  color: white;
+}
+
+.ToDo-box2 .textField {
+  background-color: white;
+}
+
+.ToDo-box3 {
+  background-image: url("../assets/background-yellow.jpg");
+  border: 2px solid black;
+}
+
+.ToDo-box4 {
+  background-image: url("../assets/background-green.jpg");
+  border: 2px solid black;
+}
+
+.buttonLink {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.7em;
+  text-transform: none;
+  color: unset;
+  font-weight: 500;
 }

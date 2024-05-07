@@ -23,7 +23,7 @@ router.post("/register", async (req, res) => {
     try {
       await newuser.save();
       console.log("User created");
-      return res.status(200).send({ message: "Success" });
+      return res.status(200).send({ msg: "Success" });
     } catch (err) {
       console.error(err);
       return res.status(500).send({ err: "Error" });
@@ -40,21 +40,14 @@ router.post("/login", async (req, res) => {
     return res.status(401).send({ err: "Invalid Email or Password!" });
   } else {
     const token = user.generateAccessJWT();
-    // console.log(token);
-    res.cookie("sessionID", token, {
-      maxAge: 20 * 60 * 1000, // Expiry time in milliseconds (e.g., 20 minutes)
-      httpOnly: true, // Cookie accessible only by the server
-      secure: true, // Cookie sent over HTTPS only
-      sameSite: "none", // Allow cross-site requests
-    });
 
-    return res.status(200).send({ sessionID: token, message: "OK" });
+    return res.status(200).send({ sessionID: token });
   }
 });
 
 router.post("/logout", async (req, res) => {
   req.session.userId = NaN;
-  res.status(200).send({ message: "Log Out successful" });
+  res.status(200).send({ msg: "Log Out successful" });
 });
 
 /*router.listen(8000, () =>
