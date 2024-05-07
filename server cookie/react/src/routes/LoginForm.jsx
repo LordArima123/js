@@ -22,13 +22,13 @@ const defaultTheme = createTheme();
 
 export default function SignIn() {
   const location = useLocation();
-  const { message } = location.state || {};
+  const { msg } = location.state || {};
   const [formInput, setFormInput] = useState({
     email: "",
     password: "",
   });
   const [errorEmail, setErrorEmail] = useState("");
-  const [responsemessage, setResponsemessage] = useState("");
+  const [responseMsg, setResponseMsg] = useState("");
   const navigate = useNavigate();
 
   const handleInput = (name, value) => {
@@ -52,10 +52,10 @@ export default function SignIn() {
     try {
       const res = await axios.post("http://localhost:8000/login", formInput);
       if (res.status >= 200 && res.status < 300) {
-        console.log("Request succeeded:", res.status);
+        console.log("Request succeeded:", res.data.msg);
 
-        const sessionID = await res.data.sessionID;
-        localStorage.setItem("sessionID", sessionID);
+        // const userId = await res.data.userId;
+        // localStorage.setItem("userId", userId);
 
         navigate("/Dashboard");
       } else {
@@ -66,7 +66,7 @@ export default function SignIn() {
       if (err.response) {
         console.log("Server Error", err.response.status);
         console.log("Server response:", err.response.data);
-        return setResponsemessage(err.response.data.err);
+        return setResponseMsg(err.response.data.err);
       } else {
         console.error(err);
       }
@@ -91,8 +91,8 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          {message && <Alert severity="success">{message}</Alert>}
-          {responsemessage && <Alert severity="error">{responsemessage}</Alert>}
+          {msg && <Alert severity="success">{msg}</Alert>}
+          {responseMsg && <Alert severity="error">{responseMsg}</Alert>}
           <Box
             component="form"
             onSubmit={handleSubmit}

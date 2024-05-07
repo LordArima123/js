@@ -34,9 +34,9 @@ export default function SignUp() {
     email: "",
     password: "",
     confirmPassword: "",
-    responsemessage: "",
+    responsemsg: "",
   });
-  const [responseMessage, setResponsemessage] = useState("");
+  const [responsemsg, setResponsemsg] = useState("");
   const navigate = useNavigate();
 
   const handleInput = (name, value) => {
@@ -121,7 +121,7 @@ export default function SignUp() {
 
         if (res.status >= 200 && res.status < 300) {
           console.log("Request succeeded:", res.data);
-          return navigate("/", { state: { message: "User Created!" } });
+          return navigate("/", { state: { msg: "User Created!" } });
         } else {
           console.log("Unexpected status:", res.status);
           // Handle other unexpected statuses
@@ -130,7 +130,7 @@ export default function SignUp() {
         if (error.response) {
           console.log("Server error:", error.response.status);
           console.log("Server response:", error.response.data);
-          return setResponsemessage(error.response.data.error);
+          return setResponsemsg(error.response.data.error);
         } else if (error.request) {
           // The request was made but no response was received
           console.log("No response received");
@@ -162,11 +162,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {responseMessage ? (
-            <Alert severity="error">{responseMessage}</Alert>
-          ) : (
-            ""
-          )}
+          {responsemsg ? <Alert severity="error">{responsemsg}</Alert> : ""}
           <Box
             component="form"
             noValidate
