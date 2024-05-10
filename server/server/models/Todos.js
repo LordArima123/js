@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const TodosList = new mongoose.Schema({
   title: String,
-  done: Boolean,
+  status: Boolean,
   piority: {
     type: Number,
     min: 1,

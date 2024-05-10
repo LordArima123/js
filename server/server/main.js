@@ -10,11 +10,14 @@ const checkSession = async (req, res, next) => {
   console.log("Checking Session");
 
   try {
-    const cookie = req.headers.authorization;
-
-    if (!cookie) return res.status(401); // if there is no cookie from request header, send an unauthorized response.
+    if (!req.headers["cookie"])
+      return res.status(401).send({ message: "Not Authorized" });
+    const authHeader = req.headers["cookie"];
+    const cookie = authHeader.split("=")[1];
+    if (!cookie) return res.status(401).send({ message: "Not Authorized" }); // if there is no cookie from request header, send an unauthorized response.
     const checkIfBlackList = await BlackList.findOne({ token: cookie });
-    if (checkIfBlackList) return res.status(401);
+    if (checkIfBlackList)
+      return res.status(401).send({ message: "Not Authorized" });
     jwt.verify(cookie, SECRET_ACCESS_TOKEN, async (err, decoded) => {
       console.log("Verifying!");
       if (err) {
@@ -60,7 +63,7 @@ router.get("/todo/:id", checkSession, async (req, res) => {
   res.status(200).send({ todo });
 }); //go to todo id
 
-router.put("/update-todo", async (req, res) => {
+router.put("/update-todo", checkSession, async (req, res) => {
   if (!req.body.title) {
     return res.status(400).send({ message: "Bad Request" });
   }
@@ -70,7 +73,7 @@ router.put("/update-todo", async (req, res) => {
   res.status(200).send({ message: "Success" });
 }); //update todo
 
-router.put("/piority", async (req, res) => {
+router.put("/piority", checkSession, async (req, res) => {
   await Todos.findByIdAndUpdate(req.body.id, { piority: req.body.piority });
 
   res.status(200).send({ message: "Success" });
@@ -81,7 +84,7 @@ router.post("/add-todo", checkSession, async (req, res) => {
 
   const todo = new Todos({
     title: req.body.title,
-    done: false,
+    status: false,
     piority: req.body.piority,
     userid: req.userID,
   });
@@ -111,7 +114,7 @@ router.get("/toggle-todo/:id", checkSession, async (req, res) => {
 
   const todo = await Todos.findById(req.params.id);
   console.log("Changing Todo");
-  await Todos.findOneAndUpdate(todo, { done: !todo.done });
+  await Todos.findOneAndUpdate(todo, { status: !todo.status });
   res.status(200).send({ message: "Success" });
 });
 

@@ -1,9 +1,10 @@
 import express from "express";
 import User from "./models/User.js";
 import BlackList from "./models/BlackList.js";
+import cors from "cors";
 
 const router = express.Router();
-
+// router.use(cors());
 const app = express();
 
 router.post("/register", async (req, res) => {
@@ -45,8 +46,6 @@ router.post("/login", async (req, res) => {
     res.cookie("sessionID", token, {
       maxAge: 20 * 60 * 1000, // Expiry time in milliseconds (e.g., 20 minutes)
       httpOnly: true, // Cookie accessible only by the server
-      secure: true, // Cookie sent over HTTPS only
-      sameSite: "none", // Allow cross-site requests
     });
 
     return res.status(200).send({ sessionID: token, message: "OK" });
@@ -55,13 +54,15 @@ router.post("/login", async (req, res) => {
 
 router.get("/logout", async (req, res) => {
   try {
-    const cookie = req.headers.authorization;
+    const authHeader = req.headers["cookie"];
+    const cookie = authHeader.split("=")[1];
     const checkIfBlackList = await BlackList.findOne({ token: cookie });
     if (checkIfBlackList) {
       res.status(204);
     }
     const newBlackList = new BlackList({ token: cookie });
     await newBlackList.save();
+    res.setHeader("Clear-Site-Data", '"cookies"');
     res.status(200).send({ message: "Log Out successful" });
   } catch (err) {
     res.status(500).send({ message: "Server Error" });

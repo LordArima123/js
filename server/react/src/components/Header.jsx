@@ -9,7 +9,7 @@ export default function Header(props) {
   const logOut = async () => {
     axios
       .get("http://localhost:8000/logout", {
-        headers: { Authorization: localStorage.getItem("sessionID") },
+        withCredentials: true,
       })
       .then((res) => {
         console.log("Status: ", res.status);
@@ -18,10 +18,10 @@ export default function Header(props) {
       .catch((err) => {
         if (err.response) {
           console.log("status: ", err.response.status);
-          console.log("Message: ", err.response.message);
+          console.log("Message: ", err.response.data.message);
         }
       });
-    localStorage.removeItem("sessionID");
+
     return navigate("/");
   };
   return (

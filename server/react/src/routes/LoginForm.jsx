@@ -50,7 +50,9 @@ export default function SignIn() {
     e.preventDefault();
     if (errorEmail) return;
     try {
-      const res = await axios.post("http://localhost:8000/login", formInput);
+      const res = await axios.post("http://localhost:8000/login", formInput, {
+        withCredentials: true,
+      });
       if (res.status >= 200 && res.status < 300) {
         console.log("Request succeeded:", res.status);
 
