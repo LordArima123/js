@@ -36,7 +36,7 @@ export default function ToDoID() {
       .catch((err) => {
         if (err.response) {
           console.log("Status: ", err.response.status);
-          console.log("message: ", err.response.message);
+          console.log("message: ", err.response.data.message);
         } else {
           console.log(err);
         }
@@ -67,7 +67,7 @@ export default function ToDoID() {
       .catch((err) => {
         if (err.response) {
           console.log("Status: ", err.response.status);
-          console.log("message: ", err.response.message);
+          console.log("message: ", err.response.data.message);
         } else {
           console.log(err);
         }
@@ -90,7 +90,7 @@ export default function ToDoID() {
       .catch((err) => {
         if (err.response) {
           console.log("Status: ", err.response.status);
-          console.log("message: ", err.response.message);
+          console.log("message: ", err.response.data.message);
         } else {
           console.log(err);
         }
@@ -140,7 +140,7 @@ export default function ToDoID() {
           alignItems: "center",
         }}
       >
-        Status: {data.done ? "Finish" : "On Going"}
+        Status: {data.status ? "Finish" : "On Going"}
       </Typography>
       <Grid
         sx={{

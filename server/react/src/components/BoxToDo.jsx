@@ -50,9 +50,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
   const sendDel = async (id) => {
     await axios
       .delete(`http://localhost:8000/remove-todo/${id}`, {
-        headers: {
-          Authorization: `${sessionId}`,
-        },
+        withCredentials: true,
       })
       .then((res) => {
         console.log(res.data);
@@ -96,7 +94,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
       const newData = {
         title: title,
         piority: piority,
-        done: false,
+        status: false,
       };
       sendAddData(newData);
     }
@@ -145,7 +143,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
               <Checkbox
                 className="checkBox"
                 size="large"
-                checked={data.done}
+                checked={data.status}
                 onChange={() => {
                   handleStatusChange(data._id);
                 }}
@@ -166,7 +164,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
                   className="buttonLink"
                   onClick={() => navigate(`/ToDo/${data._id}`)}
                 >
-                  {data.done ? (
+                  {data.status ? (
                     <del>{data.title}</del>
                   ) : (
                     <span>{data.title}</span>
