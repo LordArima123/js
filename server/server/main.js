@@ -10,8 +10,8 @@ const checkSession = async (req, res, next) => {
   console.log("Checking Session");
 
   try {
-    const cookie = req.headers.authorization;
-
+    const authHeader = req.headers["cookie"];
+    const cookie = authHeader.split("=")[1];
     if (!cookie) return res.status(401); // if there is no cookie from request header, send an unauthorized response.
     const checkIfBlackList = await BlackList.findOne({ token: cookie });
     if (checkIfBlackList) return res.status(401);

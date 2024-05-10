@@ -13,7 +13,7 @@ import Header from "../components/Header";
 
 export default function ToDoID() {
   const params = useParams();
-  const sessionID = localStorage.getItem("sessionID");
+
   const navigate = useNavigate();
   let { id } = params;
   const [data, setData] = useState({});
@@ -25,7 +25,7 @@ export default function ToDoID() {
     setLoading(true);
     axios
       .get(`http://localhost:8000/todo/${id}`, {
-        headers: { Authorization: sessionID },
+        withCredentials: true,
       })
       .then((res) => {
         console.log(res.data);
@@ -57,7 +57,7 @@ export default function ToDoID() {
       .put(
         "http://localhost:8000/update-todo",
         { id: id, title: value },
-        { headers: { Authorization: sessionID } }
+        { withCredentials: true }
       )
       .then((res) => {
         console.log("status", res.status);
@@ -80,7 +80,7 @@ export default function ToDoID() {
       .put(
         "http://localhost:8000/piority",
         { id: id, piority: value },
-        { headers: { Authorization: sessionID } }
+        { withCredentials: true }
       )
       .then((res) => {
         console.log("status: ", res.status);

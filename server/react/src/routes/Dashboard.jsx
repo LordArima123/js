@@ -7,7 +7,7 @@ import BoxToDo from "../components/BoxToDo";
 import Header from "../components/Header";
 
 function Dashboard() {
-  const sessionId = localStorage.getItem("sessionID");
+  //
   //const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -21,7 +21,7 @@ function Dashboard() {
     setLoading(true);
     await axios
       .get("http://localhost:8000/todos", {
-        headers: { Authorization: sessionId },
+        withCredentials: true,
       })
       .then((res) => {
         setList1([]);

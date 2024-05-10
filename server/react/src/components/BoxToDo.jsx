@@ -25,14 +25,13 @@ BoxToDo.propTypes = {
 };
 
 function BoxToDo({ name, data, piority, changeLoading }) {
-  const sessionId = localStorage.getItem("sessionID");
   const [add, setAdd] = useState("");
   const navigate = useNavigate();
 
   const sendAddData = async (data) => {
     await axios
       .post("http://localhost:8000/add-todo", data, {
-        headers: { Authorization: sessionId },
+        withCredentials: true,
       })
       .then((res) => {
         console.log(res.data);
@@ -72,7 +71,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
   const sendChange = async (id) => {
     await axios
       .get(`http://localhost:8000/toggle-todo/${id}`, {
-        headers: { Authorization: sessionId },
+        withCredentials: true,
       })
       .then((res) => {
         console.log(res.data);
