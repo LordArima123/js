@@ -18,7 +18,7 @@ export default function Header(props) {
       .catch((err) => {
         if (err.response) {
           console.log("status: ", err.response.status);
-          console.log("Message: ", err.response.message);
+          console.log("Message: ", err.response.data.message);
         }
       });
 
