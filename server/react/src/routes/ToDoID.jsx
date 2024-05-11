@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Header from "../components/Header";
+import { useTodoStore } from "../stores/todo-stores";
 
 export default function ToDoID() {
   const params = useParams();
@@ -19,6 +20,7 @@ export default function ToDoID() {
   const [data, setData] = useState({});
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(true);
+  const { setErrorMsg } = useTodoStore();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchData = async () => {
@@ -30,13 +32,20 @@ export default function ToDoID() {
       .then((res) => {
         console.log(res.data);
         setData(res.data.todo);
+        setTitle(res.data.todo.title);
+
         console.log("Status: ", res.status);
         setLoading(false);
       })
       .catch((err) => {
         if (err.response) {
           console.log("Status: ", err.response.status);
-          console.log("message: ", err.response.data.message);
+          const errorMessage = err.response.data.message;
+          console.log("message: ", errorMessage);
+
+          setErrorMsg(errorMessage);
+
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }
@@ -68,11 +77,16 @@ export default function ToDoID() {
         if (err.response) {
           console.log("Status: ", err.response.status);
           console.log("message: ", err.response.data.message);
+          const errorMessage = err.response.data.message;
+          setErrorMsg(errorMessage);
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }
+      })
+      .finally(() => {
+        setTitle("");
       });
-    setTitle("");
   };
 
   const submitPiority = async (value) => {
@@ -91,6 +105,9 @@ export default function ToDoID() {
         if (err.response) {
           console.log("Status: ", err.response.status);
           console.log("message: ", err.response.data.message);
+          const errorMessage = err.response.data.message;
+          setErrorMsg(errorMessage);
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }

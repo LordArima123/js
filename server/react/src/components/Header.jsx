@@ -19,6 +19,11 @@ export default function Header(props) {
         if (err.response) {
           console.log("status: ", err.response.status);
           console.log("Message: ", err.response.data.message);
+          const errorMessage = err.response.data.message;
+          localStorage.setItem("errorMessage", errorMessage);
+          return navigate(`/error/${err.response.status}`);
+        } else {
+          console.log(err);
         }
       });
 

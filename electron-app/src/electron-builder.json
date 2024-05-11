@@ -1,6 +1,6 @@
 {
   "appId": "com.example.myapp",
-  "productName": "Second Display",
+  "productName": "SecondDisplay",
   "directories": {
     "output": "../install"
   },

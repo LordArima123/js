@@ -4,6 +4,9 @@ import loginRouter from "./login.js";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import cors from "cors";
+import * as path from "path";
+const __dirname = import.meta.dirname;
+
 const server = express();
 var corsOptions = {
   origin: "http://localhost:5173",
@@ -30,12 +33,17 @@ try {
   console.log("Error connect to Database", err);
 }
 
-server.use(appRouter);
-server.use(loginRouter);
+server.use(express.static(path.join(__dirname, "public"), { index: false }));
 
-server.use((req, res) => {
-  res.status(404);
+server.use("/api", appRouter);
+server.use("/api", loginRouter);
+
+server.get("*", (req, res, next) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
 });
+// server.use((req, res) => {
+//   res.status(404);
+// });
 
 server.use((err, req, res, next) => {
   console.error(err);

@@ -2,13 +2,12 @@ import { Container, StyledEngineProvider } from "@mui/material";
 import "../components/Dashboard.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BoxToDo from "../components/BoxToDo";
 import Header from "../components/Header";
 
 function Dashboard() {
-  //
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [list1, setList1] = useState([]);
@@ -52,6 +51,9 @@ function Dashboard() {
         if (err.response) {
           console.log("Error Code", err.response.status);
           console.log(err.response.data.message);
+          const errorMessage = err.response.data.message;
+          localStorage.setItem("errorMessage", errorMessage);
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }

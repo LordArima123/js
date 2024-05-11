@@ -41,6 +41,9 @@ function BoxToDo({ name, data, piority, changeLoading }) {
         if (err.response) {
           console.log("Error Code", err.response.status);
           console.log(err.response.data.message);
+          const errorMessage = err.response.data.message;
+          localStorage.setItem("errorMessage", errorMessage);
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }
@@ -60,6 +63,9 @@ function BoxToDo({ name, data, piority, changeLoading }) {
         if (err.response) {
           console.log("Error Code", err.response.status);
           console.log(err.response.data.message);
+          const errorMessage = err.response.data.message;
+          localStorage.setItem("errorMessage", errorMessage);
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }
@@ -79,6 +85,9 @@ function BoxToDo({ name, data, piority, changeLoading }) {
         if (err.response) {
           console.log("Error Code", err.response.status);
           console.log(err.response.data.message);
+          const errorMessage = err.response.data.message;
+          localStorage.setItem("errorMessage", errorMessage);
+          return navigate(`/error/${err.response.status}`);
         } else {
           console.log(err);
         }
