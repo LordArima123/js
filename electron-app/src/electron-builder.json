@@ -5,6 +5,9 @@
     "output": "../install"
   },
   "files": ["**/*"],
+  "nsis": {
+    "include": "build/installer.nsh"
+  },
   "win": {
     "target": "nsis",
     "icon": "logobackground.png"

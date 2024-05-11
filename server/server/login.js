@@ -4,7 +4,6 @@ import BlackList from "./models/BlackList.js";
 import cors from "cors";
 
 const router = express.Router();
-// router.use(cors());
 const app = express();
 
 router.post("/register", async (req, res) => {
@@ -46,6 +45,8 @@ router.post("/login", async (req, res) => {
     res.cookie("sessionID", token, {
       maxAge: 20 * 60 * 1000, // Expiry time in milliseconds (e.g., 20 minutes)
       httpOnly: true, // Cookie accessible only by the server
+      secure: true,
+      sameSite: "None",
     });
 
     return res.status(200).send({ sessionID: token, message: "OK" });
@@ -68,10 +69,6 @@ router.get("/logout", async (req, res) => {
     res.status(500).send({ message: "Server Error" });
   }
 });
-
-/*router.listen(8000, () =>
-  console.log(`Server running on http://localhost:8000`)
-);*/
 
 app.use(router);
 

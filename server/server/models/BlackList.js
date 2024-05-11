@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const BlackList = new mongoose.Schema(
   {
-    token: { type: String, required: true, ref: "User" },
+    token: { type: String, required: true, ref: "users" },
   },
   { timestamps: true }
 );
