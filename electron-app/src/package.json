@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^30.0.2",
+    "electron-builder": "^24.13.3",
     "electron-windows-store": "^2.1.0"
   },
   "dependencies": {

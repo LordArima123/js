@@ -2,6 +2,7 @@ import { app, BrowserWindow, screen } from "electron";
 //import path from "node:path";
 // const { app, BrowserWindow } = require("electron");
 // const path = require("node:path");
+let myWindow = null;
 
 const createWindow = () => {
   const displays = screen.getAllDisplays();
@@ -43,8 +44,20 @@ const createWindow = () => {
     win.loadFile("index.html");
   }
 };
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+}
+app.on("second-instance", (event, commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (myWindow) {
+    if (myWindow.isMinimized()) myWindow.restore();
+    myWindow.focus();
+  }
+});
+
 app.whenReady().then(() => {
-  createWindow();
+  myWindow = createWindow();
 });
 
 app.on("window-all-closed", () => {
