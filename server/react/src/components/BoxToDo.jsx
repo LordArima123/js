@@ -30,7 +30,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
 
   const sendAddData = async (data) => {
     await axios
-      .post("http://localhost:8000/add-todo", data, {
+      .post("http://localhost:8000/api/add-todo", data, {
         withCredentials: true,
       })
       .then((res) => {
@@ -52,7 +52,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
 
   const sendDel = async (id) => {
     await axios
-      .delete(`http://localhost:8000/remove-todo/${id}`, {
+      .delete(`http://localhost:8000/api/remove-todo/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -74,7 +74,7 @@ function BoxToDo({ name, data, piority, changeLoading }) {
 
   const sendChange = async (id) => {
     await axios
-      .get(`http://localhost:8000/toggle-todo/${id}`, {
+      .get(`http://localhost:8000/api/toggle-todo/${id}`, {
         withCredentials: true,
       })
       .then((res) => {

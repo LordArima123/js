@@ -26,7 +26,7 @@ export default function ToDoID() {
   const fetchData = async () => {
     setLoading(true);
     axios
-      .get(`http://localhost:8000/todo/${id}`, {
+      .get(`http://localhost:8000/api/todo/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -64,7 +64,7 @@ export default function ToDoID() {
   const submitChange = async (value) => {
     axios
       .put(
-        "http://localhost:8000/update-todo",
+        "http://localhost:8000/api/update-todo",
         { id: id, title: value },
         { withCredentials: true }
       )
@@ -92,7 +92,7 @@ export default function ToDoID() {
   const submitPiority = async (value) => {
     axios
       .put(
-        "http://localhost:8000/piority",
+        "http://localhost:8000/api/piority",
         { id: id, piority: value },
         { withCredentials: true }
       )

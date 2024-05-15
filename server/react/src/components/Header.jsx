@@ -8,7 +8,7 @@ export default function Header(props) {
   const navigate = useNavigate();
   const logOut = async () => {
     axios
-      .get("http://localhost:8000/logout", {
+      .get("http://localhost:8000/api/logout", {
         withCredentials: true,
       })
       .then((res) => {

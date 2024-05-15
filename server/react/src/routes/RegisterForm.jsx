@@ -116,7 +116,10 @@ export default function SignUp() {
       };
 
       try {
-        const res = await axios.post("http://localhost:8000/register", data);
+        const res = await axios.post(
+          "http://localhost:8000/api/register",
+          data
+        );
         console.log("data", res.data);
 
         if (res.status >= 200 && res.status < 300) {

@@ -19,7 +19,7 @@ function Dashboard() {
   const fetchData = async () => {
     setLoading(true);
     await axios
-      .get("http://localhost:8000/todos", {
+      .get("http://localhost:8000/api/todos", {
         withCredentials: true,
       })
       .then((res) => {
