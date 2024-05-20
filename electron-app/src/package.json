@@ -1,20 +1,20 @@
 {
-  "name": "eletron-app",
-  "version": "1.0.0",
-  "description": "",
+  "name": "gokasa-seconddisplay",
+  "version": "1.0.1",
+  "appName": "GOKASA Second Display",
+  "description": "An app container for displaying the checkout and other content to customers",
+  "engines": {
+    "node": "20.4.0"
+  },
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "electron ."
   },
-  "author": "",
+  "author": "Ethereals United",
   "license": "ISC",
   "devDependencies": {
     "electron": "^30.0.2",
-    "electron-builder": "^24.13.3",
-    "electron-windows-store": "^2.1.0"
-  },
-  "dependencies": {
-    "auto-launch": "^5.0.6"
+    "electron-builder": "^24.13.3"
   }
 }

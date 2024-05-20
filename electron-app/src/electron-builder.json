@@ -1,6 +1,6 @@
 {
-  "appId": "com.example.myapp",
-  "productName": "SecondDisplay",
+  "appId": "cz.ethereal.gokasa-seconddisplay",
+  "productName": "GOKASA Second Display",
   "directories": {
     "output": "../install"
   },
@@ -10,6 +10,7 @@
   },
   "win": {
     "target": "nsis",
-    "icon": "logobackground.png"
+    "icon": "logobackground.png",
+    "publisherName": "Ethereals United"
   }
 }

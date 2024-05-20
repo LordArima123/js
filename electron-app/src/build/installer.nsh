@@ -1,3 +1,3 @@
 !macro customInstall
-      CreateShortCut "$SMSTARTUP\SecondDisplay.lnk" "$INSTDIR\SecondDisplay.exe"
+      CreateShortCut "$SMSTARTUP\GOKASA Second Display.lnk" "$INSTDIR\GOKASA Second Display.exe"
 !macroend
