@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "csv-parser": "^3.0.0",
     "expess": "^0.0.1-security",
     "express": "^4.19.2",
     "vite": "^5.2.10",

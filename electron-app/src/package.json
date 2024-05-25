@@ -1,6 +1,6 @@
 {
   "name": "gokasa-seconddisplay",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "appName": "GOKASA Second Display",
   "description": "An app container for displaying the checkout and other content to customers",
   "engines": {

@@ -9,7 +9,10 @@
     "include": "build/installer.nsh"
   },
   "win": {
-    "target": "nsis",
+    "target": {
+      "target": "nsis",
+      "arch": ["x64", "ia32"]
+    },
     "icon": "logobackground.png",
     "publisherName": "Ethereals United"
   }
