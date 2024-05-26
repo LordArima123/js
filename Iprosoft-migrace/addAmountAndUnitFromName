@@ -1,0 +1,117 @@
+const args = process.argv.slice(2);
+
+const fs = require('fs');
+const inputFilePath = args[0];
+const nameColumnIndex = args[1];
+let delimiter = args[2];
+if (!inputFilePath || !nameColumnIndex) {
+    console.error('You must specify an input file and the index of the name column');
+    console.error('Example: node addAmountAndUnitFromName.js inputFile.csv 2');
+    process.exit();
+}
+if (!delimiter || delimiter === '\\t') {
+    delimiter = '\t';
+}
+console.log(inputFilePath, nameColumnIndex, JSON.stringify(delimiter));
+
+const lines = fs.readFileSync(inputFilePath, 'utf8').split(/[\r\n]+/);
+const products = {};
+
+const findAmountAndUnit = name => {
+    let amount = 1;
+    let unit = "pcs";
+    if (/\d([\s]+)?ks$/i.test(name)) {
+        unit = "pcs";
+        m = name.match(/\d+[\.,]*\d*[ ]*ks$/i) || [];
+        amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    } else if (/\d([\s]+)?kg$/i.test(name)) {
+        unit = "kg";
+        m = name.match(/\d+[\.,]*\d*[ ]*kg$/i) || [];
+        amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    } else if (/\d([\s]+)?g$/i.test(name)) {
+        unit = "g";
+        m = name.match(/\d+[\.,]*\d*[ ]*g$/i) || [];
+        amount = m.length ? m[0].slice(0, -1).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    } else if (/\d([\s]+)?gr$/i.test(name)) {
+        unit = "g";
+        m = name.match(/\d+[\.,]*\d*[ ]*gr$/i) || [];
+        amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    } else if (/\d([\s]+)?ml$/i.test(name)) {
+        unit = "ml";
+        m = name.match(/\d+[\.,]*\d*[ ]*ml$/i) || [];
+        amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    } else if (/\d([\s]+)?cl$/i.test(name)) {
+        unit = "cl";
+        m = name.match(/\d+[\.,]*\d*[ ]*cl$/i) || [];
+        amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    } else if (/\d([\s]+)?l$/i.test(name)) {
+        unit = "l";
+        m = name.match(/\d+[\.,]*\d*[ ]*l$/i) || [];
+        amount = m.length ? m[0].slice(0, -1).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+    }
+    if (unit === "pcs" && amount === 1) {
+        if (/\d\s*ks/i.test(name)) {
+            unit = "pcs";
+            m = name.match(/\d+[\.,]*\d*[ ]*ks/i) || [];
+            amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*kg/i.test(name)) {
+            unit = "kg";
+            m = name.match(/\d+[\.,]*\d*[ ]*kg/i) || [];
+            amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*g/i.test(name)) {
+            unit = "g";
+            m = name.match(/\d+[\.,]*\d*[ ]*g/i) || [];
+            amount = m.length ? m[0].slice(0, -1).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*gr/i.test(name)) {
+            unit = "g";
+            m = name.match(/\d+[\.,]*\d*[ ]*g/i) || [];
+            amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*mg/i.test(name)) {
+            unit = "g";
+            m = name.match(/\d+[\.,]*\d*[ ]*mg/i) || [];
+            amount = m.length ? parseFloat(m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') + '000') : amount;
+        } else if (/\d\s*ml/i.test(name)) {
+            unit = "ml";
+            m = name.match(/\d+[\.,]*\d*[ ]*ml/i) || [];
+            amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*cl/i.test(name)) {
+            unit = "cl";
+            m = name.match(/\d+[\.,]*\d*[ ]*cl/i) || [];
+            amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*l/i.test(name)) {
+            unit = "l";
+            m = name.match(/\d+[\.,]*\d*[ ]*l/i) || [];
+            amount = m.length ? m[0].slice(0, -1).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*cm/i.test(name)) {
+            unit = "cm";
+            m = name.match(/\d+[\.,]*\d*[ ]*cm/i) || [];
+            amount = m.length ? m[0].slice(0, -2).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        } else if (/\d\s*m\s/i.test(name)) {
+            unit = "m";
+            m = name.match(/\d+[\.,]*\d*[ ]*m/i) || [];
+            amount = m.length ? m[0].slice(0, -1).replace(/\s+/g, "").replace(/,/g, '.') : amount;
+        }
+    }
+    return {
+        amount: parseFloat(amount),
+        unit: unit
+    };
+};
+
+let cnt = 0;
+let result = '';
+lines.forEach(line => {
+    line = line.trim();
+    if (!line) {
+        return false;
+    }
+    const fields = line.split(delimiter);
+    const name = fields[nameColumnIndex];
+    const { amount, unit } = findAmountAndUnit(name);
+    const outputLine = line + delimiter + amount + delimiter + unit;
+    console.log(outputLine);
+    result += outputLine + '\r\n';
+    cnt++;
+});
+fs.writeFileSync('out.csv', result);
+console.log('Number of processed rows:', cnt);
